@@ -20,7 +20,7 @@
     owner: root
     group: root
     mode: 0600
-  register: config_file_is_changed
+  register: rke2_config_file_is_changed
 
 - name: Copy Containerd Registry Configuration file
   ansible.builtin.template:

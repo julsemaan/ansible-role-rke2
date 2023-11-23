@@ -50,7 +50,7 @@
 
 - name: Debug
   ansible.builtin.debug:
-    var: config_file_is_changed
+    var: rke2_config_file_is_changed
 
 - name: Restart service when config file is changed
   ansible.builtin.include_tasks: change_config.yml
@@ -59,7 +59,7 @@
     loop_var: _host_item
   when:
   - hostvars[_host_item].inventory_hostname == inventory_hostname
-  - config_file_is_changed is defined and config_file_is_changed.changed
+  - rke2_config_file_is_changed is defined and rke2_config_file_is_changed.changed
 
 - name: Final steps
   ansible.builtin.include_tasks: summary.yml
