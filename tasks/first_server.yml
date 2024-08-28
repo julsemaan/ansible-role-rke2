@@ -151,6 +151,13 @@
   changed_when: false
   when: inventory_hostname != item and (do_etcd_restore is defined or do_etcd_restore_from_s3 is defined)
 
+- name: Restore etcd - remove /var/lib/rancher/rke2/server/cred/passwd
+  ansible.builtin.shell: |
+    rm -f /var/lib/rancher/rke2/server/cred/passwd
+  args:
+    executable: /bin/bash
+  when: do_etcd_restore is defined or do_etcd_restore_from_s3 is defined
+
 - name: Group First Active Server
   ansible.builtin.group_by:
     key: rke2_active_servers
