@@ -96,6 +96,13 @@
       register: task_output # <- Registers the command output.
       changed_when: task_output.rc != 0 # <- Uses the return code to define when the task has changed.
 
+- name: Restore etcd - remove /var/lib/rancher/rke2/server/cred/passwd
+  ansible.builtin.shell: |
+    rm -f /var/lib/rancher/rke2/server/cred/passwd
+  args:
+    executable: /bin/bash
+  when: do_etcd_restore is defined or do_etcd_restore_from_s3 is defined
+
 - name: Start RKE2 service on the first server
   ansible.builtin.systemd:
     name: "rke2-server.service"
@@ -150,13 +157,6 @@
   with_items: "{{ groups[rke2_cluster_group_name] }}"
   changed_when: false
   when: inventory_hostname != item and (do_etcd_restore is defined or do_etcd_restore_from_s3 is defined)
-
-- name: Restore etcd - remove /var/lib/rancher/rke2/server/cred/passwd
-  ansible.builtin.shell: |
-    rm -f /var/lib/rancher/rke2/server/cred/passwd
-  args:
-    executable: /bin/bash
-  when: do_etcd_restore is defined or do_etcd_restore_from_s3 is defined
 
 - name: Group First Active Server
   ansible.builtin.group_by:
